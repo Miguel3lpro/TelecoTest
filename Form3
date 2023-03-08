@@ -1,0 +1,214 @@
+using System;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Threading;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+
+namespace Proyecto
+{
+    public partial class Form3 : Form
+    {
+        string connectionString;
+        public Form3()
+        {
+            InitializeComponent();
+            this.MaximizeBox = false; // Deshabilitar el botón de maximizar
+            this.FormBorderStyle = FormBorderStyle.FixedSingle; // Deshabilitar que se pueda extirar la ventana
+            connectionString = "Server=tcp:telecotest.database.windows.net,1433;Initial Catalog=TelecoTest;Persist Security Info=False;User ID=revilla;Password=Lapspmolamucho5%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"; //Base de Datos online
+            //connectionString = @"Data Source=REVILLA\SQLEXPRESSDB;Initial Catalog=master ;User ID=sa;Password=revilla"; //Base de Datos local
+        }
+
+        private void Form3_Load(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            string Usuario = label13.Text;
+            string Contrasena = label14.Text;
+
+            using (SqlConnection connection = new SqlConnection(connectionString)) //Mostrar su puntuación mas alta 
+            {
+                connection.Open();
+                string consulta = "SELECT Puntos FROM dbo.Usuarios WHERE Usuario=@Usuario";
+                using (SqlCommand comando = new SqlCommand(consulta, connection))
+                {
+                    comando.Parameters.AddWithValue("@Usuario", Usuario);
+                    using (SqlDataReader lector = comando.ExecuteReader())
+                    {
+                        if (lector.Read())
+                        {
+                                decimal puntos = lector.GetDecimal(0);
+                                string mensaje = Usuario + ", ";
+
+                                if (puntos < 5)
+                                {
+                                    mensaje += "has cateado.";
+                                }
+                                else if (puntos == 5)
+                                {
+                                    mensaje += "has aprobado por los pelos.";
+                                }
+                                else if (puntos > 5 && puntos <= 7)
+                                {
+                                    mensaje += "sé que lo puedes hacer mejor.";
+                                }
+                                else if (puntos > 7 && puntos <= 9)
+                                {
+                                    mensaje += "buen trabajo.";
+                                }
+                                else if (puntos > 9 && puntos < 10)
+                                {
+                                    mensaje += "casi, casi llegas a la excelencia!.";
+                                }
+                                else if (puntos == 10)
+                                {
+                                    mensaje += "¡has conseguido la puntuación más alta!";
+                                }
+
+                                label12.Text = mensaje += " Tu puntuación más alta es: " + puntos;
+                        }
+                        else
+                        {
+                            label12.Text = "Error al buscar su puntuación.";
+                        }
+                    }
+                }
+                connection.Close();
+            }
+
+            Thread.Sleep(500);
+            using (SqlConnection connection = new SqlConnection(connectionString)) //Top 10 y Top del usuario ordenados por tiempo
+            {
+                connection.Open();
+
+                // Obtener la posición del usuario actual en el ranking ordenado por tiempo
+                string consulta = "SELECT COUNT(*) FROM Usuarios WHERE Puntos > (SELECT Puntos FROM Usuarios WHERE Usuario=@Usuario) OR (Puntos = (SELECT Puntos FROM Usuarios WHERE Usuario=@Usuario) AND Tiempo < (SELECT Tiempo FROM Usuarios WHERE Usuario=@Usuario))";
+                int posicion;
+                using (SqlCommand comandoPosicion = new SqlCommand(consulta, connection))
+                {
+                    comandoPosicion.Parameters.AddWithValue("@Usuario", Usuario);
+                    posicion = Convert.ToInt32(comandoPosicion.ExecuteScalar()) + 1;
+                }
+
+                // Mostrar la posición del usuario actual en el ranking
+                if (posicion == 1)
+                {
+                    label15.Text = "¡Felicidades! Eres el número 1 del ranking.";
+                }
+                else if (posicion > 1 && posicion <= 10)
+                {
+                    label15.Text = "Estás en el top 10, en la posición " + posicion + ".";
+                }
+                else
+                {
+                    label15.Text = "Eres Top " + posicion + ".";
+                }
+
+                // Obtener los datos de los 10 usuarios con más puntos ordenados por tiempo
+                string consultaTop10 = "SELECT TOP 10 Usuario, Puntos, Tiempo FROM Usuarios ORDER BY Puntos DESC, Tiempo ASC";
+                using (SqlCommand comandoTop10 = new SqlCommand(consultaTop10, connection))
+                {
+                    using (SqlDataReader lectorTop10 = comandoTop10.ExecuteReader())
+                    {
+                        int i = 1;
+                        while (lectorTop10.Read())
+                        {
+                            string usuario = lectorTop10.GetString(0);
+                            decimal puntos = lectorTop10.GetDecimal(1);
+                            TimeSpan tiempo = TimeSpan.Zero;
+
+                            if (!lectorTop10.IsDBNull(2))
+                            {
+                                tiempo = lectorTop10.GetTimeSpan(2);
+                            }
+
+                            Label label = (Label)this.Controls.Find("label" + i, true)[0];
+                            label.Text = usuario + " --> " + puntos.ToString("0.00") + " - Tiempo: " + tiempo.ToString(@"mm\:ss\.fff");
+                            i++;
+                        }
+                    }
+                }
+
+
+                connection.Close();
+            }
+            Thread.Sleep(500);
+            using (SqlConnection connection = new SqlConnection(connectionString)) //Numero total de usuarios
+            {
+                connection.Open();
+                string consulta3 = "SELECT COUNT(*) FROM dbo.Usuarios";
+                using (SqlCommand comando = new SqlCommand(consulta3, connection))
+                {
+                    int totalUsuarios = Convert.ToInt32(comando.ExecuteScalar());
+                    label17.Text = "Número total de usuarios: " + totalUsuarios.ToString();
+                }
+                connection.Close();
+            }
+
+            using (SqlConnection connection = new SqlConnection(connectionString)) //Numero del usuario
+            {
+                connection.Open();
+                string consulta4 = "SELECT ID FROM dbo.Usuarios WHERE Usuario = @Usuario";
+                using (SqlCommand comando = new SqlCommand(consulta4, connection))
+                {
+                    comando.Parameters.AddWithValue("@Usuario", Usuario);
+                    int idUsuario = Convert.ToInt32(comando.ExecuteScalar());
+                    if (idUsuario > 0)
+                    {
+                        label16.Text = "Eres el usuario nº " + idUsuario.ToString();
+                    }
+                    else
+                    {
+                        label16.Text = "Error al buscar el ID del usuario.";
+                    }
+                    connection.Close();
+                }
+            }
+            Thread.Sleep(500);
+            using (SqlConnection connection = new SqlConnection(connectionString)) //Tiempo del usuario
+            {
+                connection.Open();
+                string consulta5 = "SELECT Tiempo FROM dbo.Usuarios WHERE Usuario = @Usuario";
+                using (SqlCommand comando = new SqlCommand(consulta5, connection))
+                {
+                    comando.Parameters.AddWithValue("@Usuario", Usuario);
+                    object resultado = comando.ExecuteScalar();
+                    if (resultado != null && resultado != DBNull.Value) //Evitar que de error si tiene valor NULL
+                    {
+                        string tiempoString = resultado.ToString();
+                        TimeSpan tiempo = TimeSpan.Parse(tiempoString);
+                        label18.Text = "Has tardado: " + tiempo.ToString(@"mm\:ss\.fff");
+                    }
+                    connection.Close();
+                }
+            }
+            Thread.Sleep(500);
+            using (SqlConnection connection = new SqlConnection(connectionString)) //Tiempo medio de todos los usuarios
+            {
+                connection.Open();
+                string consulta6 = "SELECT AVG(CAST(DATEDIFF(MILLISECOND, '00:00:00.000', Tiempo) AS decimal(18,3))) FROM dbo.Usuarios";
+                using (SqlCommand comando = new SqlCommand(consulta6, connection))
+                {
+                    decimal media = (decimal)comando.ExecuteScalar();
+                    TimeSpan mediaTiempo = TimeSpan.FromMilliseconds((double)media);
+                    label19.Text = string.Format("Tiempo medio: {0:mm\\:ss\\.fff}", mediaTiempo);
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            Application.Exit();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form1 form1 = new Form1();
+            form1.Show();
+            this.Hide();
+        }
+    }
+}

@@ -1,0 +1,9 @@
+CREATE TABLE [dbo].[Usuarios] (
+    [Usuario]    NVARCHAR (50)   NOT NULL,
+    [Contrasena] NVARCHAR (50)   NOT NULL,
+    [ID]         INT             IDENTITY (1, 1) NOT NULL,
+    [Puntos]     NUMERIC (18, 2) NULL,
+    [Tiempo]     TIME (3)        NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+

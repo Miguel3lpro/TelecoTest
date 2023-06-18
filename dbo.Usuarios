@@ -3,7 +3,7 @@ CREATE TABLE [dbo].[Usuarios] (
     [Contrasena] NVARCHAR (50)   NOT NULL,
     [ID]         INT             IDENTITY (1, 1) NOT NULL,
     [Puntos]     NUMERIC (18, 2) NULL,
-    [Tiempo]     TIME (3)        NULL,
+    [Tiempo]     TIME (2)        NULL,
+    [ProfesorID] VARCHAR (50)    NULL,
     PRIMARY KEY CLUSTERED ([ID] ASC)
 );
-

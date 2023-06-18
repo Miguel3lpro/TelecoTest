@@ -25,25 +25,16 @@ namespace Proyecto
             InitializeComponent();
             this.MaximizeBox = false; // Deshabilitar el botón de maximizar
             this.FormBorderStyle = FormBorderStyle.FixedSingle; // Deshabilitar que se pueda extirar la ventana
-            connectionString = "Server=tcp:telecotest.database.windows.net,1433;Initial Catalog=TelecoTest;Persist Security Info=False;User ID=revilla;Password=Lapspmolamucho5%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"; //Base de Datos online
-            //connectionString = @"Data Source=REVILLA\SQLEXPRESSDB;Initial Catalog=master ;User ID=sa;Password=revilla"; //Base de Datos local
+            //connectionString = "Server=tcp:telecotest.database.windows.net,1433;Initial Catalog=TelecoTest;Persist Security Info=False;User ID=revilla;Password=Lapspmolamucho5%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"; //Base de Datos online
+            connectionString = @"Data Source=REVILLA\SQLEXPRESSDB;Initial Catalog=master ;User ID=sa;Password=revilla"; //Base de Datos local
         }
 
         private void BRegistrar_Click(object sender, EventArgs e)
         {
-            //Puente para no tener que usar la base de datos para pasar al siguiente formulario
-            //Form2 form2 = new Form2();
-            //form2.Show();
-            //this.Hide();
-            //BORRAR DESPUES
-
             //AVISO LEY PROTECCIÓN DE DATOS
             string mensaje = "AVISO DE PROTECCIÓN DE DATOS\n\nEn cumplimiento de la Ley de Protección de Datos Personales, le informamos que los datos personales que proporciona a través de esta aplicación serán tratados de forma confidencial y utilizados únicamente para los fines específicos para los que se hayan recopilado. Los datos recopilados tienen como único fin el acceso al juego y la posible aparición del nombre en el top 10 de las mejores notas.\n\nTiene derecho a acceder a sus datos personales, rectificarlos, cancelarlos y oponerse a su tratamiento en cualquier momento. Para ejercer estos derechos, por favor, póngase en contacto a través del correo: 5a3jbER8@padrearamburuburgoso365.educamos.com.\n\nAl utilizar esta aplicación, usted acepta que sus datos personales sean procesados de acuerdo con esta política de privacidad. Si no está de acuerdo con esta política, por favor, absténgase de utilizar esta aplicación.";
 
             MessageBox.Show(mensaje, "Aviso de protección de datos", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-
-            //MessageBox.Show("Porfavor introduce tu usuario.");
 
             String userName = TBusuario.Text;
             String userPassword = TBcontrasena.Text;
@@ -96,6 +87,12 @@ namespace Proyecto
             }
         }
 
+        private string ObtenerProfesorID()
+        {
+            string profesorID = TBNºProfesor.Text;
+            return profesorID;
+        }
+
         private void Biniciarsesion_Click(object sender, EventArgs e)
         {
             String userName = TBusuario.Text;
@@ -123,16 +120,18 @@ namespace Proyecto
                     {
                         if (Reader.Read()) 
                         {
+                            String ProfesorID = TBNºProfesor.Text;
+                            
                             label1.Visible = false;
                             //MessageBox.Show("Has iniciado sesión correctamente.");
-
-                            // Obtener la ubicación actual del formulario 1
-                            //Point ubicacionForm1 = this.Location;
-                            // Crear una instancia del formulario 2 y pasar la ubicación del formulario 1 como parámetro
-                            Form2 form2 = new Form2();
+                            string profesorID = ObtenerProfesorID();
+                            Form2 form2 = new Form2(profesorID);
 
                             form2.label7.Text = userName;
                             form2.label8.Text = userPassword;
+                            form2.LProfesorID.Text = ProfesorID;
+                            form2.TBProfesorID.Text = ProfesorID;
+
                             form2.ubicacionForm1 = this.ubicacionForm1;
                             form2.Show();
                             this.Hide();
@@ -153,6 +152,8 @@ namespace Proyecto
             Lusuario.BackColor = Color.Transparent;
             Lcontrasena.BackColor = Color.Transparent;
             label1.BackColor = Color.Transparent;
+            LToken.BackColor = Color.Transparent;
+            LNºProfesor.BackColor = Color.Transparent;
 
             ubicacionForm1 = this.Location;
 
@@ -160,7 +161,7 @@ namespace Proyecto
             label6.AutoSize = false; // Para que el tamaño se respete
             label6.Size = new Size(290, 320);
             label6.Font = new Font("Microsoft Sans Serif", 10, FontStyle.Regular);
-            label6.Text = "Proyecto realizado por Miguel Revilla de 2ºEST.\nEl siguiente proyecto es un juego interactivo de 10 preguntas. Son preguntas tipo test, con 3 respuestas, del modulo de EST del segundo año. Son al azar al igual que el orden de las respuestas.\nSi aciertas sumarás un punto en cambio si fallas se restará 0.33 puntos. Tendrás la opción de pasar a otra pregunta si no te la sabes. Si consigues una puntuación negativa, se guardará la puntuación 0.00.\nSi consigues una menor puntuación que la anterior, no se guardará\nEn caso de empate con otro jugador , ganará el que en menos tiempo lo haya realizado.\n¿Estás listo para jugar? ¿Lograrás el Top 1?";
+            label6.Text = "Proyecto realizado por Miguel Revilla de 2ºEST.\nEl siguiente proyecto es un juego interactivo de 10 preguntas. Son preguntas tipo test, con 3 respuestas. Son al azar al igual que el orden de las respuestas.\nSi aciertas sumarás un punto en cambio si fallas se restará 0.33 puntos. Tendrás la opción de pasar a otra pregunta si no te la sabes. Si consigues una puntuación negativa, se guardará la puntuación 0.00.\nSi consigues una menor puntuación que la anterior, no se guardará\nEn caso de empate con otro jugador , ganará el que en menos tiempo lo haya realizado.\n¿Estás listo para jugar? ¿Lograrás el Top 1?";
 
             //Estadísticas
             using (SqlConnection connection = new SqlConnection(connectionString)) //Numero total de usuarios
@@ -187,7 +188,6 @@ namespace Proyecto
                 }
                 connection.Close();
             }
-
 
             /*using (SqlConnection connection = new SqlConnection(connectionString)) //Puntuación mas alta
             {
@@ -256,12 +256,16 @@ namespace Proyecto
 
             BAtras.Visible = true;
 
+            BProfesores.Visible = false;
+
             Lusuario.Visible = true;
             Lcontrasena.Visible = true;
             TBusuario.Visible = true;
             TBcontrasena.Visible = true;
             BRegistrar.Visible = true;
             Biniciarsesion.Visible = true;
+            LNºProfesor.Visible = true;
+            TBNºProfesor.Visible = true;
         }
 
         private void BInformación_Click(object sender, EventArgs e)
@@ -270,6 +274,8 @@ namespace Proyecto
             BInformación.Visible = false;
             BEstadísticas.Visible = false;
             BSalir.Visible = false;
+
+            BProfesores.Visible = false;
 
             BAtras.Visible = true;
 
@@ -287,6 +293,8 @@ namespace Proyecto
             BInformación.Visible = false;
             BEstadísticas.Visible = false;
             BSalir.Visible = false;
+
+            BProfesores.Visible = false;
 
             BAtras.Visible = true;
 
@@ -326,6 +334,13 @@ namespace Proyecto
 
             BAtras.Visible = false;
 
+            LToken.Visible = false;
+            TBToken.Visible = false;
+            BCrearCuenta2.Visible = false;
+            BIniciarSesion2.Visible = false;
+
+            BProfesores.Visible = true;
+
             //LOGIN/REGISTER
             Lusuario.Visible = false;
             Lcontrasena.Visible = false;
@@ -333,7 +348,9 @@ namespace Proyecto
             TBcontrasena.Visible = false;
             BRegistrar.Visible = false;
             Biniciarsesion.Visible = false;
-            
+            LNºProfesor.Visible = false;
+            TBNºProfesor.Visible = false;
+
             //ESTADÍSTICAS
             LEstadísticas.Visible = false;
             label2.Visible = false;
@@ -349,5 +366,159 @@ namespace Proyecto
 
         }
 
+        private void BProfesores_Click(object sender, EventArgs e)
+        {
+            BJugar.Visible = false;
+            BInformación.Visible = false;
+            BEstadísticas.Visible = false;
+            BSalir.Visible = false;
+
+            BAtras.Visible = true;
+
+            BProfesores.Visible = false;
+
+            Lusuario.Visible = true;
+            Lcontrasena.Visible = true;
+            TBusuario.Visible = true;
+            TBcontrasena.Visible = true;
+            BCrearCuenta2.Visible = true;
+            BIniciarSesion2.Visible = true;
+
+            Lusuario.Location = new Point(360, 188);
+            TBusuario.Location = new Point(360, 218);
+
+            Lcontrasena.Location = new Point(360, 250);
+            TBcontrasena.Location = new Point(360, 280);
+
+            LToken.Location = new Point(360, 310);
+            TBToken.Location = new Point(360, 340);
+
+            LToken.Visible = true;
+            TBToken.Visible = true;
+        }
+
+        private void BCrearCuenta2_Click(object sender, EventArgs e)
+        {
+            //AVISO LEY PROTECCIÓN DE DATOS
+            string mensaje = "AVISO DE PROTECCIÓN DE DATOS\n\nEn cumplimiento de la Ley de Protección de Datos Personales, le informamos que los datos personales que proporciona a través de esta aplicación serán tratados de forma confidencial y utilizados únicamente para los fines específicos para los que se hayan recopilado. Los datos recopilados tienen como único fin el acceso al juego y la posible aparición del nombre en el top 10 de las mejores notas.\n\nTiene derecho a acceder a sus datos personales, rectificarlos, cancelarlos y oponerse a su tratamiento en cualquier momento. Para ejercer estos derechos, por favor, póngase en contacto a través del correo: 5a3jbER8@padrearamburuburgoso365.educamos.com.\n\nAl utilizar esta aplicación, usted acepta que sus datos personales sean procesados de acuerdo con esta política de privacidad. Si no está de acuerdo con esta política, por favor, absténgase de utilizar esta aplicación.";
+
+            MessageBox.Show(mensaje, "Aviso de protección de datos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            String userName = TBusuario.Text;
+            String userPassword = TBcontrasena.Text;
+
+
+            if (userName.Equals(""))
+            {
+                //MessageBox.Show("Porfavor introduce tu usuario.");
+                label1.Text = "Porfavor introduce tu usuario.";
+                label1.Visible = true;
+            }
+            else if (userPassword.Equals(""))
+            {
+                //MessageBox.Show("Porfavor introduce tu contraseña.");
+                label1.Text = "Porfavor introduce tu contraseña.";
+                label1.Visible = true;
+            }
+            else if (string.IsNullOrEmpty(TBToken.Text))
+            {
+                label1.Text = "Porfavor introduce tu Token.";
+                label1.Visible = true;
+            }
+            else if (TBToken.Text != "123456789")
+            {
+                label1.Text = "Token incorrecto.";
+                label1.Visible = true;
+            }
+            else
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    String query = "INSERT INTO dbo.Profesores (Usuario, Contrasena) VALUES (@usuario,@contrasena)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@usuario", TBusuario.Text);
+                        command.Parameters.AddWithValue("@contrasena", TBcontrasena.Text);
+
+                        connection.Open();
+
+                        SqlCommand commandrevisar = new SqlCommand("SELECT * FROM dbo.Profesores WHERE Usuario='" + userName + "'", connection);
+                        using (SqlDataReader Reader = commandrevisar.ExecuteReader())
+                        {
+                            if (Reader.Read())
+                            {
+                                //MessageBox.Show("Usuario ya registrado.");
+                                label1.Text = "Usuario ya registrado.";
+                                label1.Visible = true;
+                                return;
+                            }
+                        }
+                        int result = command.ExecuteNonQuery();
+                        if (result < 0)
+                            Console.WriteLine("Error inserting data into Database!");
+
+                        SqlCommand commandActualizarToken = new SqlCommand("UPDATE dbo.Profesores SET Token = '123456789'", connection);
+                        commandActualizarToken.ExecuteNonQuery();
+
+                        label1.Text = "Te has registrado correctamente.";
+                        label1.Visible = true;
+                    }
+                }
+            }
+        }
+
+        private void BIniciarSesion2_Click(object sender, EventArgs e)
+        {
+            String ProfesorName = TBusuario.Text;
+            String ProfesorPassword = TBcontrasena.Text;
+
+            if (ProfesorName.Equals(""))
+            {
+                label1.Text = "Porfavor introduce tu usuario.";
+                label1.Visible = true;
+            }
+            else if (ProfesorPassword.Equals(""))
+            {
+                label1.Text = "Porfavor introduce tu contraseña.";
+                label1.Visible = true;
+            }
+            else if (string.IsNullOrEmpty(TBToken.Text))
+            {
+                label1.Text = "Porfavor introduce tu Token.";
+                label1.Visible = true;
+            }
+            else if (TBToken.Text != "123456789")
+            {
+                label1.Text = "Token incorrecto.";
+                label1.Visible = true;
+            }
+            else
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand("SELECT * FROM dbo.Profesores WHERE Usuario='" + ProfesorName + "' and Contrasena ='" + ProfesorPassword + "'", connection);
+                    using (SqlDataReader Reader = command.ExecuteReader())
+                    {
+                        if (Reader.Read())
+                        {
+                            label1.Visible = false;
+                            Form4 form4 = new Form4();
+
+                            int idProfesor = Convert.ToInt32(Reader["ID"]); 
+                            form4.LUserName.Text = idProfesor.ToString(); 
+                            form4.Show();
+                            this.Hide();
+                        }
+                        else
+                        {
+                            label1.Text = "Usuario o contraseña incorrectos.";
+                            label1.Visible = true;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

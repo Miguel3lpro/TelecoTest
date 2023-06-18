@@ -18,13 +18,13 @@ namespace Proyecto
             InitializeComponent();
             this.MaximizeBox = false; // Deshabilitar el botón de maximizar
             this.FormBorderStyle = FormBorderStyle.FixedSingle; // Deshabilitar que se pueda extirar la ventana
-            connectionString = "Server=tcp:telecotest.database.windows.net,1433;Initial Catalog=TelecoTest;Persist Security Info=False;User ID=revilla;Password=Lapspmolamucho5%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"; //Base de Datos online
-            //connectionString = @"Data Source=REVILLA\SQLEXPRESSDB;Initial Catalog=master ;User ID=sa;Password=revilla"; //Base de Datos local
+            //connectionString = "Server=tcp:telecotest.database.windows.net,1433;Initial Catalog=TelecoTest;Persist Security Info=False;User ID=revilla;Password=Lapspmolamucho5%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"; //Base de Datos online
+            connectionString = @"Data Source=REVILLA\SQLEXPRESSDB;Initial Catalog=master ;User ID=sa;Password=revilla"; //Base de Datos local
         }
 
         private void Form3_Load(object sender, EventArgs e)
         {
-            Form2 form2 = new Form2();
+            //Form2 form2 = new Form2();
             string Usuario = label13.Text;
             string Contrasena = label14.Text;
 

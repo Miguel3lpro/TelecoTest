@@ -19,90 +19,82 @@ namespace Proyecto
     public partial class Form2 : Form
     {
         public Point ubicacionForm1;
-
-        string connectionString;
-        List<(string, string, string, string)> preguntas = new List<(string, string, string, string)>()
-        {
-            //Gestión de Proyectos
-            ("¿Qué es un diagrama de flujo?", "Es una representación gráfica de un proceso o algoritmo utilizando símbolos y flechas.", "Es un tipo de documento de texto utilizado para describir un proceso o algoritmo.", "Es un dispositivo utilizado para la visualización de información en una computadora."),
-            ("¿Para qué sirve programar?", "Sirve para escribir instrucciones que una computadora puede seguir para realizar una tarea específica.", "Sirve para diseñar circuitos electrónicos para dispositivos electrónicos.", "Sirve para crear diseños gráficos y visuales en una computadora."),
-            ("¿Cuál es la utilidad de un algoritmo?", "Es una serie de instrucciones paso a paso para resolver un problema o realizar una tarea.", "Es un tipo de conexión inalámbrica utilizada para conectarse a una red.", "Es una unidad de medida utilizada para medir la velocidad de procesamiento de una computadora."),
-            ("¿Utilidad del diagrama de Gantt?", "Es una herramienta visual utilizada para representar las tareas y actividades de un proyecto y su programación a lo largo del tiempo.", "Es un tipo de dispositivo utilizado para la entrada de datos en una computadora.", "Es un tipo de dispositivo de almacenamiento externo utilizado para almacenar archivos y datos."),
-            ("Definición de proyecto.", "Un proyecto es una tarea o conjunto de tareas que se llevan a cabo para lograr un objetivo específico.", "Un proyecto es una unidad de medida utilizada para medir la capacidad de almacenamiento de una computadora.", "Un proyecto es un tipo de conexión inalámbrica utilizada para conectar dispositivos a una red."),
-            ("Características de un proyecto.", "Un proyecto tiene un objetivo específico, un plazo, un presupuesto y un equipo responsable de su ejecución.", "Un proyecto es una unidad de medida utilizada para medir la velocidad de procesamiento de una computadora.", "Un proyecto es un tipo de documento de texto utilizado para describir un proceso o algoritmo."),
-            ("Fases de un proyecto.", "Las fases de un proyecto son la planificación, la ejecución y el cierre.", "Las fases de un proyecto son la conexión, la comunicación y el almacenamiento de datos.", "Las fases de un proyecto son la entrada, el procesamiento y la salida de datos."),
-            ("Definición de tarea.", "Una tarea es una unidad de trabajo que debe ser completada como parte de un proyecto.", "Una tarea es una unidad de medida utilizada para medir la capacidad de almacenamiento de una computadora.", "Una tarea es un tipo de conexión inalámbrica utilizada para conectar dispositivos a una red."),
-            ("Definición de hito.", "Un hito es un evento importante dentro de un proyecto que marca un progreso significativo hacia la finalización del proyecto.", "Un hito es una unidad de medida utilizada para medir la velocidad de procesamiento de una computadora.", "Un hito es un tipo de dispositivo de almacenamiento externo utilizado para almacenar archivos y datos."),
-            ("Utilidades de simular.", "La simulación se utiliza para modelar y predecir el comportamiento de sistemas complejos en situaciones reales.", "La simulación se utiliza para mejorar la seguridad física en los edificios.", "La simulación se utiliza para la gestión de proyectos en empresas."),
-            //Redes Telemáticas
-            ("¿Qué es un rol? ", "Es un conjunto de permisos que definen lo que un usuario puede hacer en un sistema.", "Es un tipo de cable utilizado para conectar dispositivos de red.", "Es un dispositivo que permite la conexión inalámbrica a una red."),
-            ("¿Qué es una característica?", "Es una cualidad o atributo distintivo de algo.", "Es una pieza de hardware utilizada para almacenar datos.", "Es un tipo de software que permite la conexión a una red."),
-            ("Definición de DHCP.", "Es un protocolo de red que permite asignar direcciones IP automáticamente a dispositivos conectados a una red.", "Es un tipo de antivirus utilizado para proteger los servidores de la red.", "Es un lenguaje de programación utilizado para el desarrollo de aplicaciones web."),
-            ("¿Qué es una unidad organizativa?", "Es un contenedor lógico utilizado para agrupar objetos en una estructura jerárquica en un directorio activo.", "Es un tipo de servidor utilizado para compartir archivos en una red.", "Es un tipo de firewall utilizado para proteger una red de ataques externos."),
-            ("¿Qué es un active directory?", "Es un servicio de directorio de Microsoft utilizado para centralizar la administración de recursos en una red.", "Es una tecnología de virtualización utilizada para ejecutar múltiples sistemas operativos en un solo hardware.", "Es un protocolo de red utilizado para transferir archivos entre servidores y clientes."),
-            ("¿Qué es un DNS?", "Es un sistema de nomenclatura jerárquica utilizado para asignar nombres a dispositivos en una red y traducirlos a direcciones IP.", "Es un tipo de malware utilizado para robar información confidencial de los usuarios.", "Es un tipo de software que permite la conexión remota a un servidor."),
-            ("Definición de un Usuario.", "Es una persona que utiliza un sistema o servicio de computación.", "Es un tipo de software utilizado para realizar cálculos matemáticos complejos.", "Es un tipo de hardware utilizado para conectarse a una red inalámbrica."),
-            ("Que es un Grupo.", "Es una colección de cuentas de usuario que comparten los mismos permisos y recursos.", "Un grupo es tambien un usuario.", "Un grupo es una cuenta individual utilizada para acceder a un sistema o servicio."),
-            ("¿Qué es un Dominio?", "Es una agrupación lógica de equipos, usuarios y recursos en una red.", "Es un tipo de servidor utilizado para enviar y recibir correos electrónicos.", "Es un tipo de software utilizado para la creación de documentos y presentaciones."),
-            ("¿Cuál es la utilidad de tener equipos clientes agregados a un Dominio?", "Permite centralizar la administración de usuarios y recursos en una red, lo que simplifica la gestión y mejora la seguridad.", "No tiene utilidad práctica en una red.", "Permite aumentar la velocidad de la conexión a Internet."),
-            //Sistemas de producción audiovisual
-            ("¿Cuál de estos no es un programa de edición de video? ", "Adobe Premiere.", "Davinci Resolve.", "Gimp"),
-            ("¿Para qué sirve el efecto de inserción de croma?", "Eliminar el fondo en un video.", "Agregar un efecto de movimiento a un objeto.", "Agregar un efecto de sonido al video."),
-            ("¿Que es un storyboard?", "Formato de video corto que cuenta una historia.", "Guion gráfico.", "Efecto que simula una animación."),
-            ("¿Función principal de la marca Brightsign?", "Reproducir una cartelería.", "Postproducción de video.", "Animación de fotografías"),
-            ("Altavoz especializado en altas frecuencias.", "Woofer.", "Tweeter.", "Squawker."),
-            ("¿Qué es el bitrate en la edición de video?", "La cantidad de datos que se transmiten por segundo en un archivo de video.", "Un efecto que se aplica para reducir la calidad del video.", "La velocidad de fotogramas por segundo en un video."),
-            ("¿Cuál es la función de un micrófono direccional?", "Capturar sonido de una dirección específica mientras reduce el ruido de fondo.", "Capturar sonido de todas las direcciones por igual.", "Eliminar el ruido de fondo del sonido grabado."),
-            ("¿Qué es el formato de archivo RAW en la fotografía?", "Un formato de archivo sin comprimir que contiene toda la información de la imagen.", "Un formato de archivo comprimido que pierde información de la imagen.", "Un formato de archivo de audio sin comprimir."),
-            ("¿Qué es el ISO en la fotografía?", "La sensibilidad del sensor de la cámara a la luz.", "El tiempo de exposición de la cámara.", "La apertura del diafragma de la cámara."),
-            ("¿Qué es el balance de blancos en la fotografía?", "El ajuste de la cámara para obtener colores precisos en diferentes condiciones de iluminación.", "El ajuste de la cámara para hacer que la imagen sea más clara u oscura.", "El ajuste de la cámara para cambiar la perspectiva de la imagen."),
-            //Sistemas de telefónia
-            ("¿Qué es la tabla routing?", "Es una tabla en la que se almacenan las rutas de red aprendidas por el router.", "Es un registro de la actividad de red en tiempo real.", "Es un dispositivo de red utilizado para enrutar el tráfico de red."),
-            ("¿Cuál es el comando correcto de enrutamiento estático?", "ip route [network] [subnet mask] [next-hop address or interface]", "ipconfig", "ping"),
-            ("¿Qué comando es mejor a la hora de crear una ruta estática predeterminada?", "ip route 0.0.0.0 0.0.0.0 [next-hop address or interface]", "ipconfig /flushdns", "traceroute"),
-            ("¿Definición de OSPF?", "Open Shortest Path First, es un protocolo de enrutamiento de gateway interior.", "Una herramienta de análisis de tráfico de red.", "Un tipo de firewall de red."), 
-            ("¿Cuál es el comando correcto de OSPF?", "router ospf [process ID]", "ipconfig /all", "ping"),
-            ("¿Qué es NAT?", "Network Address Translation, es una técnica utilizada para cambiar las direcciones IP de origen o destino en los paquetes de red.", "Un tipo de servidor de red.", "Una herramienta de monitoreo de red."),
-            ("Este comando 'ip nat pool' a qué tipo de NAT corresponde.", "NAT dinámica.", "NAT estática.", "NAT de sobrecarga."),
-            ("¿Para qué sirve abrir puertos en un router?", "Para permitir que el tráfico de red se dirija a un dispositivo específico en la red.", "Para cerrar la red y prevenir el tráfico no deseado.", "Para monitorear el tráfico de red."),
-            ("Utilidad de VLAN.", "Permiten separar físicamente diferentes grupos de dispositivos en la red.", "Son herramientas utilizadas para cifrar el tráfico de red.", "Son dispositivos que se utilizan para conectar redes remotas."),
-            ("¿Qué es un puerto troncal?", "Es un puerto utilizado para transportar tráfico VLAN a través de varios switches.", "Es un puerto utilizado para conectar dispositivos a la red.", "Es un tipo de firewall de red."),
-            //Empresa e iniciativa empredendora
-            ("¿Qué es un contrato?", "Un acuerdo legal entre dos o más partes.", "Una lista de contactos de posibles clientes.", "Un registro de las ventas realizadas por una empresa."),
-            ("¿Qué es un albarán?", "Un documento que certifica la entrega de un producto o servicio.", "Una herramienta de marketing para promocionar un producto o servicio.", "Una lista de objetivos financieros para el año en curso."),
-            ("¿Qué es el cash flow?", "La cantidad de efectivo que entra y sale de una empresa.", "El departamento encargado de las ventas.", "El plan financiero a largo plazo de una empresa."),
-            ("¿Qué es el euribor?", "El tipo de interés al que los bancos europeos se prestan dinero entre sí.", "El proceso de crear una página web.", "El conjunto de herramientas informáticas utilizadas en marketing."),
-            ("¿Qué es la inversión?", "El acto de dedicar recursos con la esperanza de obtener un beneficio futuro.", "La creación de una red de contactos profesionales.", "El objetivo financiero que una empresa espera alcanzar."),
-            ("¿Qué es el plan de empresa?", "Un documento que describe la idea de negocio y cómo se va a llevar a cabo.", "Un informe financiero anual.", "Un registro de las ventas realizadas por una empresa."),
-            ("¿Qué es un DAFO?", "Un análisis de las Debilidades, Amenazas, Fortalezas y Oportunidades de una empresa.", "Un documento legal necesario para crear una empresa.", "Un plan de marketing para una empresa."),
-            ("¿Qué es el target?", "El grupo de personas al que va dirigido un producto o servicio.", "El proceso de llevar a cabo la contabilidad de una empresa.", "El conjunto de herramientas informáticas utilizadas en marketing."),
-            ("¿Qué es el ROI?", "Retorno de inversión.", "La lista de objetivos financieros para el año en curso.", "Una herramienta de marketing para promocionar un producto o servicio."),
-            ("¿Qué es un plan de empresa?", "Un documento que describe la idea de negocio y cómo se va a llevar a cabo.", "Una lista de contactos de posibles clientes.", "Un registro de las ventas realizadas por una empresa.")
-            
-              // Faltan más preguntas...
-        };
-
-        List<int> preguntasUtilizadas = new List<int>();
-        Random random = new Random();
-        int indiceActual;
-
+        private string connectionString;
+        private List<(string, string, string, string)> preguntas = new List<(string, string, string, string)>();
+        private List<int> preguntasUtilizadas = new List<int>();
+        private Random random = new Random();
+        private int indiceActual;
         private decimal Puntos = 0.00M;
-
         private DateTime tiempoInicial;
 
-        public Form2()
+        public Form2(string profesorID)
         {
             InitializeComponent();
             this.MaximizeBox = false; // Deshabilitar el botón de maximizar
             this.FormBorderStyle = FormBorderStyle.FixedSingle; // Deshabilitar que se pueda extirar la ventana
-            connectionString = "Server=tcp:telecotest.database.windows.net,1433;Initial Catalog=TelecoTest;Persist Security Info=False;User ID=revilla;Password=Lapspmolamucho5%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"; //Base de Datos online
-            //connectionString = @"Data Source=REVILLA\SQLEXPRESSDB;Initial Catalog=master ;User ID=sa;Password=revilla"; //Base de Datos local
+
+            //label10.Text = ProfesorID;
+            //connectionString = "Server=tcp:telecotest.database.windows.net,1433;Initial Catalog=TelecoTest;Persist Security Info=False;User ID=revilla;Password=Lapspmolamucho5%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"; //Base de Datos online
+            connectionString = @"Data Source=REVILLA\SQLEXPRESSDB;Initial Catalog=master ;User ID=sa;Password=revilla"; //Base de Datos local
+
+            button3.Click += button3_Click_1;
+
+
+            CargarPreguntasDesdeDB(profesorID);
             SiguientePregunta();
+        }
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            // Obtener la ID del profesor ingresada por el usuario
+            string profesorID = TBProfesorID.Text;
+
+            // Validar que se haya ingresado una ID de profesor
+            if (!string.IsNullOrEmpty(profesorID))
+            {
+                // Cargar las preguntas desde la base de datos utilizando la ID del profesor
+                CargarPreguntasDesdeDB(profesorID);
+
+                // Mostrar la primera pregunta
+                SiguientePregunta();
+            }
+            else
+            {
+                MessageBox.Show("Por favor, ingrese la ID del profesor.");
+            }
+        }
+
+        private void CargarPreguntasDesdeDB(string profesorID)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT Pregunta, Respuesta1, Respuesta2, Respuesta3 FROM Preguntas WHERE ProfesorID = @ProfesorID";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                Form1 form1 = new Form1();
+                command.Parameters.AddWithValue("@ProfesorID", profesorID);
+                command.ExecuteNonQuery();
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string pregunta = reader.GetString(0);
+                    string respuesta1 = reader.GetString(1);
+                    string respuesta2 = reader.GetString(2);
+                    string respuesta3 = reader.GetString(3);
+
+                    preguntas.Add((pregunta, respuesta1, respuesta2, respuesta3));
+                }
+
+                reader.Close();
+                connection.Close();
+            }
         }
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox3.Checked == true)
+            if (checkBox3.Checked)
             {
                 if (checkBox3.Text == preguntas[indiceActual].Item2)
                 {
@@ -114,6 +106,7 @@ namespace Proyecto
                     label5.Text = "La respuesta es: Incorrecta";
                     Puntos -= 0.33M;
                 }
+
                 label6.Text = Puntos.ToString();
                 checkBox3.Checked = false;
                 SiguientePregunta();
@@ -125,7 +118,7 @@ namespace Proyecto
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox2.Checked == true)
+            if (checkBox2.Checked)
             {
                 if (checkBox2.Text == preguntas[indiceActual].Item2)
                 {
@@ -137,6 +130,7 @@ namespace Proyecto
                     label5.Text = "La respuesta es: Incorrecta";
                     Puntos -= 0.33M;
                 }
+
                 label6.Text = Puntos.ToString();
                 checkBox2.Checked = false;
                 SiguientePregunta();
@@ -148,7 +142,7 @@ namespace Proyecto
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox1.Checked == true)
+            if (checkBox1.Checked)
             {
                 if (checkBox1.Text == preguntas[indiceActual].Item2)
                 {
@@ -160,11 +154,11 @@ namespace Proyecto
                     label5.Text = "La respuesta es: Incorrecta";
                     Puntos -= 0.33M;
                 }
+
                 label6.Text = Puntos.ToString();
                 checkBox1.Checked = false;
                 SiguientePregunta();
 
-                
                 string mensaje = "Pregunta " + preguntasUtilizadas.Count + " de 10"; //Pregunta X de 10
                 label9.Text = mensaje;
             }
@@ -189,9 +183,9 @@ namespace Proyecto
             label1.Text = preguntas[indiceActual].Item1;
             List<string> respuestasPosibles = new List<string>()
             {
-            preguntas[indiceActual].Item2,
-            preguntas[indiceActual].Item3,
-            preguntas[indiceActual].Item4
+                preguntas[indiceActual].Item2,
+                preguntas[indiceActual].Item3,
+                preguntas[indiceActual].Item4
             };
 
             respuestasPosibles = respuestasPosibles.OrderBy(r => random.Next()).ToList();
@@ -202,8 +196,6 @@ namespace Proyecto
 
             if (preguntasUtilizadas.Count == 11)
             {
-
-
                 decimal puntos = decimal.Parse(label6.Text);
 
                 string Usuario = label7.Text;
@@ -211,36 +203,42 @@ namespace Proyecto
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-
                     if (Puntos < 0) //Si sacas puntuación negativa, guarda un 0
                     {
                         Puntos = 0;
                     }
+
                     string consulta = "SELECT Puntos FROM Usuarios WHERE Usuario=@Usuario AND Contrasena=@Contrasena";
+
                     using (SqlCommand comandorevisar = new SqlCommand(consulta, connection))
                     {
                         connection.Open();
                         comandorevisar.Parameters.AddWithValue("@Usuario", Usuario);
                         comandorevisar.Parameters.AddWithValue("@contrasena", Contrasena);
+
                         using (SqlDataReader lector = comandorevisar.ExecuteReader(CommandBehavior.SingleResult))
                         {
                             if (lector.Read())
                             {
                                 decimal puntosanteriores;
+
                                 if (lector.IsDBNull(0)) // Para que no de error si hay valor NULL
                                 {
                                     puntosanteriores = -1;
                                     double tiempoMilisegundos = (DateTime.Now - tiempoInicial).TotalMilliseconds;
                                     TimeSpan tiempoTotal = TimeSpan.FromMilliseconds(tiempoMilisegundos);
                                     string tiempoTotalString = tiempoTotal.ToString(@"hh\:mm\:ss\.fff");
+
                                     using (SqlConnection connection2 = new SqlConnection(connectionString)) //Guarda puntos 0.00 pero tiempo si
                                     {
                                         connection2.Open();
-                                        string query = "UPDATE Usuarios SET Puntos=@Puntos, Tiempo=@Tiempo WHERE Usuario=@Usuario";
+                                        string query = "UPDATE Usuarios SET Puntos=@Puntos, Tiempo=@Tiempo, ProfesorID=@ProfesorID WHERE Usuario=@Usuario";
+
                                         using (SqlCommand comando = new SqlCommand(query, connection))
                                         {
                                             comando.Parameters.AddWithValue("@Puntos", 0);
                                             comando.Parameters.AddWithValue("@Tiempo", tiempoTotalString);
+                                            comando.Parameters.AddWithValue("@ProfesorID", TBProfesorID.Text);
                                             comando.Parameters.AddWithValue("@Usuario", label7.Text);
                                             lector.Close();
                                             comando.ExecuteNonQuery();
@@ -253,7 +251,9 @@ namespace Proyecto
                                 {
                                     puntosanteriores = lector.GetDecimal(0);
                                 }
+
                                 lector.Close();
+
                                 if (Puntos <= puntosanteriores)
                                 {
                                     //MessageBox.Show("Los puntos son iguales o menores a los que ya tienes. Por favor, obtén puntos positivos en futuras partidas.");
@@ -261,12 +261,14 @@ namespace Proyecto
                                 else
                                 {
                                     consulta = "UPDATE usuarios SET Puntos=@Puntos WHERE Usuario=@Usuario AND Contrasena=@Contrasena";
+
                                     using (SqlCommand comandoupdate = new SqlCommand(consulta, connection))
                                     {
                                         comandoupdate.Connection = connection;
                                         comandoupdate.Parameters.AddWithValue("@Puntos", Puntos);
                                         comandoupdate.Parameters.AddWithValue("@Usuario", Usuario);
                                         comandoupdate.Parameters.AddWithValue("@Contrasena", Contrasena);
+                                        comandoupdate.Parameters.AddWithValue("@ProfesorID", TBProfesorID.Text);
                                         comandoupdate.ExecuteNonQuery();
 
                                         //MessageBox.Show("Los puntos se han guardado correctamente.");
@@ -274,9 +276,11 @@ namespace Proyecto
                                         double tiempoMilisegundos = (DateTime.Now - tiempoInicial).TotalMilliseconds;
                                         TimeSpan tiempoTotal = TimeSpan.FromMilliseconds(tiempoMilisegundos);
                                         string tiempoTotalString = tiempoTotal.ToString(@"hh\:mm\:ss\.fff");
-                                        using (SqlConnection connection2 = new SqlConnection(connectionString))//guardar el tiempo
+
+                                        using (SqlConnection connection2 = new SqlConnection(connectionString)) //guardar el tiempo
                                         {
                                             string query = "UPDATE Usuarios SET Tiempo=@Tiempo WHERE Usuario=@Usuario";
+
                                             using (SqlCommand comando = new SqlCommand(query, connection))
                                             {
                                                 comando.Connection = connection;
@@ -294,24 +298,25 @@ namespace Proyecto
                                 MessageBox.Show("Error a la hora de guardar los datos.");
                             }
                         }
+
                         connection.Close();
                     }
-
                 }
+
                 Form3 form3 = new Form3();
 
-                form3.label13.Text = Usuario; 
-                form3.label14.Text = Usuario; 
+                form3.label13.Text = Usuario;
+                form3.label14.Text = Usuario;
 
                 form3.Show();
                 this.Close();
-            } 
+            }
         }
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            this.Location = ubicacionForm1;
 
+            this.Location = ubicacionForm1;
 
             tiempoInicial = DateTime.Now;
 
@@ -319,45 +324,21 @@ namespace Proyecto
             Puntos = 0.00M;
             label6.Text = Puntos.ToString();
 
-            //.BackColor = Color.Transparent;
-            label9.BackColor = Color.Transparent;
-            label1.BackColor = Color.Transparent;
-            label2.BackColor = Color.Transparent;
-            label3.BackColor = Color.Transparent;
-            label4.BackColor = Color.Transparent;
-            checkBox1.BackColor = Color.Transparent;
-            checkBox2.BackColor = Color.Transparent;
-            checkBox3.BackColor = Color.Transparent;
+            //label9.BackColor = Color.Transparent;
+            //label1.BackColor = Color.Transparent;
+            //label2.BackColor = Color.Transparent;
+            //label3.BackColor = Color.Transparent;
+            //label4.BackColor = Color.Transparent;
+            //checkBox1.BackColor = Color.Transparent;
+            //checkBox2.BackColor = Color.Transparent;
+            //checkBox3.BackColor = Color.Transparent;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e) //boton Siguiente pregunta 
         {
             SiguientePregunta();
             string mensaje = "Pregunta " + preguntasUtilizadas.Count + " de 10"; //Pregunta X de 10
             label9.Text = mensaje;
-        }
-
-        private void button2_Click(object sender, EventArgs e)//boton Anterior pregunta 
-        {
-            if (preguntasUtilizadas.Count > 1)
-            {
-                /* Restar la puntuación si la pregunta anterior se respondió correctamente
-                int indiceAnterior = preguntasUtilizadas[preguntasUtilizadas.Count - 2];
-                if (preguntas[indiceAnterior].Item2 == label3.Text)
-                {
-                    Puntos -= 1M;
-                }
-
-                // Cambiar el índice actual y cargar la pregunta anterior
-                preguntasUtilizadas.RemoveAt(preguntasUtilizadas.Count - 1);
-                indiceActual = preguntasUtilizadas.Last();
-                AnteriorPregunta();*/
-            }
-        }
-    
-        private void AnteriorPregunta() //anteriorPregunta
-        {
-            
         }
     }
 }

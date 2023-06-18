@@ -1,0 +1,8 @@
+CREATE TABLE [dbo].[Preguntas] (
+    [ID]         INT           IDENTITY (1, 1) NOT NULL,
+    [Pregunta]   NVARCHAR (50) NOT NULL,
+    [Respuesta1] NVARCHAR (50) NOT NULL,
+    [Respuesta2] NVARCHAR (50) NOT NULL,
+    [Respuesta3] NVARCHAR (50) NOT NULL,
+    [ProfesorID] NVARCHAR (50) NOT NULL
+);

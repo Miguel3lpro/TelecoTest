@@ -1,0 +1,211 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Reflection.Emit;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Proyecto
+{
+    public partial class Form4 : Form
+    {
+        string connectionString;
+
+        public Form4()
+        {
+            InitializeComponent();
+            connectionString = @"Data Source=REVILLA\SQLEXPRESSDB;Initial Catalog=master;User ID=sa;Password=revilla";
+        }
+
+        private void Form4_Load(object sender, EventArgs e)
+        {
+            label1.Text = "Nº " + LUserName.Text;
+            this.usuariosTableAdapter.Fill(this.masterDataSet4.Usuarios);
+            LoadPreguntas();
+
+            LPregunta.BackColor = Color.Transparent;
+            LRespuesta1.BackColor = Color.Transparent;
+            LRespuesta2.BackColor = Color.Transparent;
+            LRespuesta3.BackColor = Color.Transparent;
+
+            dataGridView1.Visible= false;
+        }
+        private void LoadPreguntas()
+        {
+            DataTable dataTable = new DataTable();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM Preguntas WHERE ProfesorID = @profesorId";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@profesorId", LUserName.Text);
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    adapter.Fill(dataTable);
+                }
+            }
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView.DataSource = dataTable;
+        }
+
+        private void ClearTextBoxes()
+        {
+            TBPregunta.Clear();
+            TBRespuesta1.Clear();
+            TBRespuesta2.Clear();
+            TBRespuesta3.Clear();
+        }
+
+        private void BAñadir_Click_1(object sender, EventArgs e)
+        {
+            string pregunta = TBPregunta.Text;
+            string respuesta1 = TBRespuesta1.Text;
+            string respuesta2 = TBRespuesta2.Text;
+            string respuesta3 = TBRespuesta3.Text;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO Preguntas (Pregunta, Respuesta1, Respuesta2, Respuesta3, ProfesorID) VALUES (@pregunta, @respuesta1, @respuesta2, @respuesta3, @profesorId)";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@pregunta", pregunta);
+                    command.Parameters.AddWithValue("@respuesta1", respuesta1);
+                    command.Parameters.AddWithValue("@respuesta2", respuesta2);
+                    command.Parameters.AddWithValue("@respuesta3", respuesta3);
+                    command.Parameters.AddWithValue("@profesorId", LUserName.Text);
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+            LoadPreguntas();
+            ClearTextBoxes();
+        }
+
+        private void BQuitar_Click(object sender, EventArgs e)
+        {
+            if (dataGridView.SelectedRows.Count > 0)
+            {
+                int idPregunta = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "DELETE FROM Preguntas WHERE ID = @idPregunta";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@idPregunta", idPregunta);
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                LoadPreguntas();
+            }
+            else
+            {
+                MessageBox.Show("Selecciona una pregunta para eliminar.");
+            }
+        }
+
+        private void BQuitarTodo_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("¿Estás seguro de que deseas eliminar todas las preguntas?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "DELETE FROM Preguntas WHERE ProfesorID = @ProfesorID";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ProfesorID", LUserName.Text);
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+                LoadPreguntas();
+            }
+        }
+
+        private void BSalir_Click(object sender, EventArgs e)
+        {
+            Form1 form1 = new Form1();
+            form1.Show();
+            this.Close();
+        }
+
+        private void BResultados_Click(object sender, EventArgs e)
+        {
+            LPregunta.Visible = false;
+            LRespuesta1.Visible = false;
+            LRespuesta2.Visible = false;
+            LRespuesta3.Visible = false;
+            BAñadir.Visible = false;
+            BQuitar.Visible = false;
+            BQuitarTodo.Visible = false;
+
+            TBPregunta.Visible = false;
+            TBRespuesta1.Visible = false;
+            TBRespuesta2.Visible = false;
+            TBRespuesta3.Visible = false;
+
+            BVolver.Visible = true;
+
+            dataGridView1.Visible = true;
+            dataGridView.Visible = false;
+
+            DataTable dataTable1 = new DataTable();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT Usuario, Contrasena, Puntos, Tiempo FROM Usuarios WHERE ProfesorID = @ProfesorID";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ProfesorID", LUserName.Text);
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    adapter.Fill(dataTable1);
+                }
+            }
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView1.DataSource = dataTable1;
+        }
+
+        private void BVolver_Click(object sender, EventArgs e)
+        {
+            LPregunta.Visible = true;
+            LRespuesta1.Visible = true;
+            LRespuesta2.Visible = true;
+            LRespuesta3.Visible = true;
+            BAñadir.Visible = true;
+            BQuitar.Visible = true;
+            BQuitarTodo.Visible = true;
+
+            TBPregunta.Visible = true;
+            TBRespuesta1.Visible = true;
+            TBRespuesta2.Visible = true;
+            TBRespuesta3.Visible = true;
+
+            dataGridView1.Visible = false;
+            dataGridView.Visible = true;
+
+            BVolver.Visible = false;
+
+            DataTable dataTable = new DataTable();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM Preguntas WHERE ProfesorID = @profesorId";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@profesorId", LUserName.Text);
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    adapter.Fill(dataTable);
+                }
+            }
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView.DataSource = dataTable;
+
+        }
+    }
+}
